@@ -30,18 +30,18 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     const phone = document.getElementById('signupPhone').value;
     const schoolId = document.getElementById('signupSchoolId').value;
 
-    // Sign up with Supabase
-    const { user, error } = await supabase.auth.signUp({
+    // Sign up with Supabase Auth
+    const { user, error: authError } = await supabase.auth.signUp({
         email,
         password,
     });
 
-    if (error) {
-        alert('Error signing up: ' + error.message);
+    if (authError) {
+        alert('Error signing up: ' + authError.message);
     } else {
         // Save additional user data to Supabase
         const { data, error: dbError } = await supabase
-            .from('students')
+            .from('students') // Replace 'students' with your table name
             .insert([{ name, email, phone, school_id: schoolId, user_id: user.id }]);
 
         if (dbError) {
